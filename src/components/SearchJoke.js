@@ -2,6 +2,8 @@ import './SearchJoke.css'
 import { useRef, useState } from 'react'
 import { Formik, Field, Form, useFormik } from "formik";
 import SearchResults from './SearchResults';
+import SearchHistory from './SearchHistory';
+// import { useHistory } from 'react-router-dom';
 
 
  // A custom validation function. This must return an object
@@ -9,7 +11,7 @@ import SearchResults from './SearchResults';
  const validate = values => {
     const errors = {}; 
     if (!values.search) {
-      errors.search = 'Required';
+      errors.search = 'Search term is required';
     } else if (!/^[a-zA-Z]+$/i.test(values.search)) {
       errors.search = 'Invalid search term';
     }
@@ -18,6 +20,8 @@ import SearchResults from './SearchResults';
 
 function SearchJoke(){
     const [jokeResults, setJokeResults] = useState([]);
+    const [searchHistory, setSearchHistory] = useState([]);
+    // const history = useHistory();
     // Pass the useFormik() hook initial form values and a submit function that will
    // be called when the form is submitted
    const formik = useFormik({
@@ -27,6 +31,7 @@ function SearchJoke(){
     validate,
     onSubmit: values => {
         console.log(values);
+      setSearchHistory(values.search);  
       alert(JSON.stringify(values, null, 2));
       fetch(`https://icanhazdadjoke.com/search?term=${values.search}`,
         {
@@ -70,20 +75,24 @@ function SearchJoke(){
     return (
         <>
         <form onSubmit={formik.handleSubmit}>
-            <label htmlFor="search">Enter your search term</label>
             <input
                 id="search"
+                className="input"
                 name="search"
-                type="text"
+                type="search"
+                title="Enter your search term"
+                aria-label="Enter your search term"
+                placeholder="Search Joke"
                 maxLength = "10"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.search}
             />
-             {formik.touched.search && formik.errors.search ? (<div className='form-error'>{formik.errors.search}</div>) : null}
-            <button type="submit">Submit</button>
+            <button className='search-button' type="submit">Search</button>
         </form>
+        {formik.touched.search && formik.errors.search ? (<div className='form-error'>{formik.errors.search}</div>) : null}
          { jokeResults.length != 0 && <SearchResults jokeData = {jokeResults} /> }
+         {searchHistory.length != 0 &&  <div>{searchHistory}</div> }
         </>
 
      

@@ -28,3 +28,31 @@
   color: #61dafb;
 }
 
+.container {
+  margin-top: 2.5rem;
+}
+
+.actions {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.actions button {
+  text-align: center;
+  white-space: nowrap;
+  background: #0071e3;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  color: #fff;
+  border-radius: none;
+  font-size: 17px;
+  padding: 6px 18px;
+  border-radius: 3px;
+}
+
+.actions button:hover,
+.actions button:active {
+  background-color: #2582df;
+}
+

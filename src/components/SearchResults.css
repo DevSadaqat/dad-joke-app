@@ -3,6 +3,13 @@ table {
     border-collapse: collapse;
     width: 100%;
   }
+  table td, table th {
+    border: 1px solid #dbdbdb;
+    border-width: 0 0 1px;
+    padding: 0.5em 0.75em;
+    vertical-align: top;
+    font-weight: normal;
+}  
   th, td {
     padding: 0.25rem;
     text-align: left;
@@ -11,13 +18,10 @@ table {
     background: #eee;
   }
 
-  .section {
-    background-color: #fff;
-    padding: 3rem 1.5rem;
-  }
-
-  .search-results{
+  .results-table{
     display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;  
     margin-left: 5rem;
     margin-right: 5rem;
