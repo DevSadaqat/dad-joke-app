@@ -1,77 +1,62 @@
-import './SearchJoke.css'
-import { useRef, useState } from 'react'
+import './SearchJoke.css';
+import { useRef, useState } from 'react';
 import { Formik, Field, Form, useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import SearchResults from './SearchResults';
 import SearchHistory from './SearchHistory';
-// import { useHistory } from 'react-router-dom';
 
 
- // A custom validation function. This must return an object
- // which keys are symmetrical to our values/initialValues
- const validate = values => {
-    const errors = {}; 
-    if (!values.search) {
-      errors.search = 'Search term is required';
-    } else if (!/^[a-zA-Z]+$/i.test(values.search)) {
-      errors.search = 'Invalid search term';
-    }
-    return errors;
-  };
-
-function SearchJoke(){
-    const [jokeResults, setJokeResults] = useState([]);
-    const [searchHistory, setSearchHistory] = useState([]);
-    // const history = useHistory();
-    // Pass the useFormik() hook initial form values and a submit function that will
-   // be called when the form is submitted
-   const formik = useFormik({
-    initialValues: {
-      search: '',
-    },
-    validate,
-    onSubmit: values => {
-        console.log(values);
-      setSearchHistory(values.search);  
-      alert(JSON.stringify(values, null, 2));
-      fetch(`https://icanhazdadjoke.com/search?term=${values.search}`,
-        {
-            method: "GET",
-            headers: {
-                Accept: "application/json"
-            }
-
+    // A custom validation function. This must return an object
+    // which keys are symmetrical to our values/initialValues
+    const validate = values => {
+        const errors = {}; 
+        if (!values.search) {
+        errors.search = 'Search term is required';
+        } else if (!/^[a-zA-Z]+$/i.test(values.search)) {
+        errors.search = 'Invalid search term';
         }
-      ).then(res => res.json()
-      ).then(data => {
-        console.log(data);
-        setJokeResults(data);
-        })
-        .catch(error => console.log(error));
-    },
-  });
-    
-    // const [ invalidForm, setInvalidForm ] = useState(false);
-    // const [ errorMessage, setErrorMessage ] = useState("");
-    // const searchInputRef = useRef();
-    // function submitHandler(event) {
-    //     //prevent browser default to send request to the server 
-    //     event.preventDefault();
+        return errors;
+    };
 
-    //     const enteredTerm = searchInputRef.current.value;
+    function SearchJoke(){
 
-    //     if(!enteredTerm){
-    //         setInvalidForm(true);
-    //         setErrorMessage("Search term is required");
-    //         return;
-    //     }
+        // access the global store of the app
+        const searchItems = useSelector((state) => state.searchTerms);
+        const dispatch = useDispatch();
+        const [jokeResults, setJokeResults] = useState([]);
 
-    //     console.log(enteredTerm);
-    //     const data = {
-    //         searchTerm: enteredTerm
-    //     }
+        // const history = useHistory();
+        // Pass the useFormik() hook initial form values and a submit function that will
+        // be called when the form is submitted
+        const formik = useFormik({
+            initialValues: {
+            search: '',
+            },
+            validate,
+            onSubmit: values => {
+            //dispatching action to our Redux store for storing serach terms in the global state
+            dispatch({
+                type: "ADD_TO_LIST",
+                item: values.search
+            });
+            alert(JSON.stringify(values, null, 2));
+            fetch(`https://icanhazdadjoke.com/search?term=${values.search}`,
+                {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json"
+                    }
 
-    //     console.log(data);
-    // }  
+                }
+            ).then(res => res.json()
+            ).then(data => {
+                setJokeResults(data);
+                })
+                .catch(error => console.log(error));
+            },
+        });
+     
     return (
         <>
         <form onSubmit={formik.handleSubmit}>
@@ -91,25 +76,9 @@ function SearchJoke(){
             <button className='search-button' type="submit">Search</button>
         </form>
         {formik.touched.search && formik.errors.search ? (<div className='form-error'>{formik.errors.search}</div>) : null}
-         { jokeResults.length != 0 && <SearchResults jokeData = {jokeResults} /> }
-         {searchHistory.length != 0 &&  <div>{searchHistory}</div> }
+        {searchItems.length != 0 &&  <SearchHistory searchHistory = {searchItems} /> }
+        { jokeResults.length != 0 && <SearchResults jokeData = {jokeResults} /> }
         </>
-
-     
-        // <form className='search-bar' onSubmit={submitHandler}>
-        //     <label htmlFor="header-search">
-        //         <span className="visually-hidden">Search for jokes</span>
-        //     </label>
-        //     <input
-        //         type="text"
-        //         className='input'
-        //         placeholder="Search for jokes"
-        //         maxLength = "10"
-        //         ref={searchInputRef}
-        //     />
-        //     {invalidForm && <div className='form-error'> {errorMessage} </div>}
-        //     <button className='search-button'>Search</button>
-        // </form>
     );
 }
 

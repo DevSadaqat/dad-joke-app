@@ -1,12 +1,19 @@
+import './SearchHistory.css'
+
+
 function SearchHistory(props) {
-    let searchTerms = [];
-    searchTerms = props.searchedTerms;
-    console.log(props.searchedTerms.length); 
+ 
+    const size = -5;
+    const terms = props.searchHistory;
 
     return (
-        <ul>
-            <li></li>
-        </ul>
+        <div>
+            <p>Previously searched terms: </p>
+            <ul className="list">
+                {terms.slice(size).map((item) => <li>{item}</li> 
+                )}
+            </ul>
+        </div>
     );
 }
 

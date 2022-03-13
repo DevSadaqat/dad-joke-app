@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import './App.css';
 import SearchJoke from "./components/SearchJoke";
 import SearchResults from "./components/SearchResults";
+import { Provider as ReduxProvider } from "react-redux";
+import appStore from "../src/lib/AppStore";
 
 
 function App() {
@@ -24,7 +26,6 @@ function App() {
               }
             ).then(res => res.json()
             ).then(data => {
-                console.log(data);
                 setLoadedJoke(data.joke);
                 setIsJokeRequested(true);
                 setIsLoading(false);
@@ -41,19 +42,20 @@ function App() {
       }
      
   return (
-    <div className="App">
-      <header className="App-header">
-       <h2>Dad Jokes</h2>
-      </header>
-      <div className="container">
-        <div><SearchJoke /></div>
-        <div className='actions'>
-            <button type="button" onClick={handleJokeReq} >Get A Joke!</button>
+    <ReduxProvider store={appStore}>
+      <div className="App">
+        <header className="App-header">
+        <h2>Dad Jokes</h2>
+        </header>
+        <div className="container">
+          <div><SearchJoke /></div>
+          <div className='actions'>
+              <button type="button" onClick={handleJokeReq} >Get A Joke!</button>
+          </div>
         </div>
-        {/* <div><Button onClickJokeFunction = {handleJokeReq}></Button></div>  */}
+          { isJokeRequested && <p>{loadedJoke}</p> }
       </div>
-        { isJokeRequested && <p>{loadedJoke}</p> }
-    </div>
+    </ReduxProvider>
   );
 }
 
