@@ -40,7 +40,7 @@ import SearchHistory from './SearchHistory';
                 type: "ADD_TO_LIST",
                 item: values.search
             });
-            alert(JSON.stringify(values, null, 2));
+            // alert(JSON.stringify(values, null, 2));
             fetch(`https://icanhazdadjoke.com/search?term=${values.search}`,
                 {
                     method: "GET",

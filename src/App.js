@@ -53,7 +53,7 @@ function App() {
               <button type="button" onClick={handleJokeReq} >Get A Joke!</button>
           </div>
         </div>
-          { isJokeRequested && <p>{loadedJoke}</p> }
+          { isJokeRequested && <p>Random Joke: {loadedJoke}</p> }
       </div>
     </ReduxProvider>
   );

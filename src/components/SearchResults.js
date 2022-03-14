@@ -9,14 +9,14 @@ function SearchResults(props) {
     return (
         <div className='results-table'>
             <h2> {totalJokes} jokes found for the search term {searchTerm}</h2> 
-                <table>
+                <table data-testid="result-list">
                     <thead>
                         <tr>
                             <th>Jokes</th>
                         </tr>
                     </thead>
                     <tbody>
-                            {results.map(jokes => <tr><th>{jokes.joke}</th></tr>)}   
+                            {results.map(jokes => <tr key={jokes.id}><th>{jokes.joke}</th></tr>)}   
                     </tbody>
                 </table>
         </div>
